@@ -12,12 +12,13 @@ def test(model, dataloader):
     print('-' * 10)
     model.eval()
     running_corrects = 0
-    for inputs, labels in dataloader:
-        inputs = inputs.to(device)
-        labels = labels.to(device)
+    with torch.no_grad():
+        for inputs, labels in dataloader:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
-        outputs = model(inputs)
-        _, preds = torch.max(outputs, 1)
-        running_corrects += torch.sum(preds == labels.data)
+            outputs = model(inputs)
+            _, preds = torch.max(outputs, 1)
+            running_corrects += torch.sum(preds == labels.data)
     percent = round(running_corrects.item() / len(dataloader.dataset) * 100, 2)
     print(f"Correct {running_corrects} among {len(dataloader.dataset)} - {percent}%")
