@@ -19,5 +19,5 @@ def test(model, dataloader):
         outputs = model(inputs)
         _, preds = torch.max(outputs, 1)
         running_corrects += torch.sum(preds == labels.data)
-
-    print(f"Correct {running_corrects} among {len(dataloader.dataset)}")
+    percent = round(running_corrects.item() / len(dataloader.dataset) * 100, 2)
+    print(f"Correct {running_corrects} among {len(dataloader.dataset)} - {percent}%")
