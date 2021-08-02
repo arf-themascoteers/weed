@@ -8,7 +8,7 @@ from torch.optim import lr_scheduler
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def train(model, dataloader, num_epochs=25):
+def train(model, dataloader, num_epochs=10):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
@@ -19,6 +19,7 @@ def train(model, dataloader, num_epochs=25):
         model.train()
         running_loss = 0.0
         running_corrects = 0
+        batch = 0
         for inputs, labels in dataloader:
             inputs = inputs.to(device)
             labels = labels.to(device)
@@ -33,7 +34,8 @@ def train(model, dataloader, num_epochs=25):
 
             running_loss += loss.item()
             running_corrects += torch.sum(preds == labels.data)
-
+            print(f"Epoch #{epoch}, Batch #{batch}, Loss = {loss.item()}")
+            batch = batch + 1
         scheduler.step()
 
         print(f"Epoch #{epoch}")
